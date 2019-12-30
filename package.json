@@ -1,0 +1,24 @@
+{
+  "name": "bulls-and-bears-api",
+  "version": "1.0.0",
+  "description": "Backend for the bulls-and-bears app",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "keywords": [
+    "bulls-and-bears",
+    "word",
+    "game"
+  ],
+  "author": "Aravindh S N R",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "check-word": "^1.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "knex": "^0.20.4",
+    "pg": "^7.16.0"
+  }
+}
