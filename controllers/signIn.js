@@ -15,7 +15,7 @@ const handleSignIn = (db, bcrypt) => (request, response) => {
             points: data[0].points
         })
         :
-        response.json('Incorrect username and/or password.');
+        response.json('Incorrect username or password.');
     })
     .catch(error => {
         response.status(400).json('Error signing in.');

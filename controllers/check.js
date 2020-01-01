@@ -4,7 +4,7 @@ const checkValidWord = (db, checkWord) => (request, response) => {
     const {id, word} = request.body;
 
     if (!word || word.length !== 5 || !checkWord.check(word.toLowerCase())) {
-        return response.json('Not a valid five-letter English word. Please try again.');
+        return response.json('Not a valid five-letter English word.');
     }
 
     // SELECT word FROM current_word WHERE id = id
@@ -34,11 +34,13 @@ const calculateBullsAndBears = (correctWord, attemptedWord) => {
     }
 
     // Calculate number of bears
-    for (let i = 0; i < attemptedWord.length && !bullPositions.includes(i); i++) {
-        for (let j = 0; j < correctWord.length; j++) {
-            if (attemptedWord[i] === correctWord[j]) {
-                bears++;
-                break;
+    for (let i = 0; i < attemptedWord.length; i++) {
+        if (!bullPositions.includes(i)) {
+            for (let j = 0; j < correctWord.length; j++) {
+                if (attemptedWord[i] === correctWord[j]) {
+                    bears++;
+                    break;
+                }
             }
         }
     }
