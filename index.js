@@ -34,6 +34,7 @@ const check = require('./controllers/check');
 const points = require('./controllers/points');
 const leaderboard = require('./controllers/leaderboard');
 
+app.get('/', (request, response) => {response.send('I am ready to play Bulls & Bears!')});
 app.post('/signin', signIn.handleSignIn(db, bcrypt));
 app.post('/register', register.handleRegister(db, bcrypt));
 app.get('/profile/:id', profile.getUserProfile(db));
@@ -42,4 +43,4 @@ app.post('/check', check.checkValidWord(db, checkWord));
 app.put('/points', points.updatePoints(db));
 app.get('/leaderboard', leaderboard.generateLeaderboard(db));
 
-app.listen(process.env.PORT || 8080);
+app.listen(process.env.PORT || 3000);
