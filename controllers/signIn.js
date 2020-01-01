@@ -1,10 +1,10 @@
-// Sign in user
+// Sign in player
 
 const handleSignIn = (db, bcrypt) => (request, response) => {
     const {username, password} = request.body;
 
-    // SELECT username, hash FROM users WHERE username = username
-    db.select('*').from('users').where({username})
+    // SELECT username, hash FROM players WHERE username = username
+    db.select('*').from('players').where({username})
     .then(data => {
         
         // Check if password hashes match

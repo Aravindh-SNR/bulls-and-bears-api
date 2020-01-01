@@ -1,4 +1,4 @@
-// Update user's points and store the word won in database
+// Update player's points and store the word won in database
 
 const updatePoints = db => (request, response) => {
     const {id, word} = request.body;
@@ -6,21 +6,21 @@ const updatePoints = db => (request, response) => {
     // Use transaction to ensure data is inserted into both or none of the tables
     db.transaction(transaction => {
 
-        // UPDATE users SET points = points + 1 WHERE id = id
-        db('users').where({id}).increment('points', 1).returning('points')
+        // UPDATE players SET points = points + 1 WHERE id = id
+        db('players').where({id}).increment('points', 1).returning('points')
         .transacting(transaction)
         .then(async data => {
 
-            // Ensure user exists
+            // Ensure player exists
             if (!data.length) {
-                return response.status(400).json('User not found.');
+                return response.status(400).json('Player not found.');
             }
 
             // DELETE FROM current_word WHERE id = id, word = word
             const n = await db('current_word').where({id, word: word.toLowerCase()}).del()
             .transacting(transaction);
 
-            // Ensure word completed by user and current word stored in database are same
+            // Ensure word completed by player and current word stored in database are same
             if (!n) {
                 throw new Error();
             }

@@ -1,4 +1,4 @@
-// Check if word entered by user exists in the English language
+// Check if word entered by player exists in the English language
 
 const checkValidWord = (db, checkWord) => (request, response) => {
     const {id, word} = request.body;

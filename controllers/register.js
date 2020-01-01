@@ -1,4 +1,4 @@
-// Register user
+// Register player
 
 const handleRegister = (db, bcrypt) => (request, response) => {
     
@@ -13,8 +13,8 @@ const handleRegister = (db, bcrypt) => (request, response) => {
         return response.status(400).json('Password cannot be blank.');
     }
     
-    //INSERT INTO users (username, hash, joined) VALUES (username, hash, new Date())
-    db('users').insert({
+    //INSERT INTO players (username, hash, joined) VALUES (username, hash, new Date())
+    db('players').insert({
         username,
         hash: bcrypt.hashSync(password, SALT_ROUNDS),
         joined: new Date()
@@ -23,7 +23,7 @@ const handleRegister = (db, bcrypt) => (request, response) => {
         response.json(data[0]);
     })
     .catch(error => {
-        error.constraint === 'users_username_key' ?
+        error.constraint === 'players_username_key' ?
         response.json('Sorry, username already exists.')
         :
         response.status(400).json('Error registering.');

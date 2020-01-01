@@ -11,10 +11,8 @@ const checkWord = require('check-word')('en');
 const db = require('knex')({
     client: 'pg',
     connection: {
-      host : '127.0.0.1',
-      user : 'postgres',
-      password : 'Pbv@90211sql',
-      database : 'bulls-and-bears'
+      connectionString: process.env.DATABASE_URL,
+      ssl: true,
     }
 });
 
@@ -28,7 +26,6 @@ const words = require('./static/words.json');
 
 const signIn = require('./controllers/signIn');
 const register = require('./controllers/register');
-const profile = require('./controllers/profile');
 const play = require('./controllers/play');
 const check = require('./controllers/check');
 const points = require('./controllers/points');
@@ -37,7 +34,6 @@ const leaderboard = require('./controllers/leaderboard');
 app.get('/', (request, response) => {response.send('I am ready to play Bulls & Bears!')});
 app.post('/signin', signIn.handleSignIn(db, bcrypt));
 app.post('/register', register.handleRegister(db, bcrypt));
-app.get('/profile/:id', profile.getUserProfile(db));
 app.get('/play/:id', play.getWord(db, words));
 app.post('/check', check.checkValidWord(db, checkWord));
 app.put('/points', points.updatePoints(db));
