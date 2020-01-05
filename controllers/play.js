@@ -19,7 +19,7 @@ const getWord = (db, words) => (request, response) => {
 
                 // Ensure player has not already found out all the words in the list
                 if (data.length === 500) {
-                    return response.json('You have found out all the words I had thought of!');
+                    return response.json('You have played all the words I had thought of!');
                 }
 
                 // Ensure chosen word is not already in user's words-won list

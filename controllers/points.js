@@ -1,39 +1,35 @@
-// Update player's points and store the word won in database
+// Update player's points and store the word played in database
 
 const updatePoints = db => (request, response) => {
-    const {id, word} = request.body;
+    const {id, points} = request.body;
 
-    // Use transaction to ensure data is inserted into both or none of the tables
-    db.transaction(transaction => {
+    // SELECT word FROM current_word WHERE id = id
+    db.select('word').from('current_word').where({id})
+    .then(data => {
 
-        // UPDATE players SET points = points + 1 WHERE id = id
-        db('players').where({id}).increment('points', 1).returning('points')
-        .transacting(transaction)
-        .then(async data => {
+        // Use transaction to ensure data is updated in both or none of the tables
+        db.transaction(transaction => {
 
-            // Ensure player exists
-            if (!data.length) {
-                return response.status(400).json('Player not found.');
-            }
+            // INSERT INTO words_won VALUES (id, data[0].word)
+            // table name 'words_won' is misleading, think of it as 'words_played'
+            db('words_won').insert({id, word: data[0].word})
+            .transacting(transaction)
+            .then(async result => {
 
-            // DELETE FROM current_word WHERE id = id, word = word
-            const n = await db('current_word').where({id, word: word.toLowerCase()}).del()
-            .transacting(transaction);
+                // UPDATE players SET points = points + points WHERE id = id
+                points &&
+                await db('players').where({id}).increment('points', points)
+                .transacting(transaction);
 
-            // Ensure word completed by player and current word stored in database are same
-            if (!n) {
-                throw new Error();
-            }
-
-            // INSERT INTO words VALUES (id, word)
-            await db('words_won').insert({id, word: word.toLowerCase()})
-            .transacting(transaction);
-
-            // Send updated points as response
-            response.json(data[0]);
+                // Send current word as response
+                response.json({word: data[0].word});
+            })
+            .then(transaction.commit)
+            .catch(transaction.rollback)
         })
-        .then(transaction.commit)
-        .catch(transaction.rollback)
+        .catch(error => {
+            response.status(400).json('Error updating points.');
+        });
     })
     .catch(error => {
         response.status(400).json('Error updating points.');
